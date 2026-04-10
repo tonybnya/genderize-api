@@ -37,6 +37,8 @@ def classify_name():
         else:
             return jsonify({"status": "error", "message": error_message}), 400
 
+    name = name.strip()
+
     try:
         # Call Genderize.io API
         response = requests.get(
@@ -50,7 +52,7 @@ def classify_name():
         # process the response
         processed_data, error = make_response(data)
         if error:
-            return jsonify({"status": "error", "message": error}), 400
+            return jsonify({"status": "error", "message": error}), 404
 
         return jsonify({"status": "success", "data": processed_data}), 200
 
