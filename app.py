@@ -67,8 +67,8 @@ def classify_name():
         if error:
             return jsonify(
                 {
-                    "status": "error,"
-                        "message": error
+                    "status": "error",
+                    "message": error
                 }
             ), 400
         return jsonify(
