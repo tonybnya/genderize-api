@@ -20,6 +20,8 @@ def validate_name(name: str | None) -> tuple[bool, str | None]:
         return False, "Missing 'name' query parameter"
     if not isinstance(name, str):
         return False, "Name must be a string"
+    if not any(c.isalpha() for c in name):
+        return False, "Name must be a string"
     if not name.strip():
         return False, "Name cannot be empty"
     return True, None
