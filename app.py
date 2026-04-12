@@ -4,11 +4,17 @@ Description: Flask API endpoint for gender classification using Genderize.io API
 Author: @tonybnya
 """
 
+import os
+
 import requests
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from utils import make_response, validate_name
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -16,26 +22,24 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 # Config constants
 GENDERIZE_API_URL = "https://api.genderize.io"
 REQUEST_TIMEOUT = 5  # seconds
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 HOST = "0.0.0.0"
-PORT = 5000
+PORT = int(os.environ.get("PORT", 5000))
 
 
 @app.route("/")
 def root():
-    """Root endpoint.
-    """
+    """Root endpoint."""
     return {
         "message": "Welcome to Genderize API",
         "version": "v1.0.0",
-        "author": "@tonybnya"
+        "author": "@tonybnya",
     }
 
 
 @app.route("/api/classify", methods=["GET"])
 def classify_name():
-    """Classify a name using Genderize.io API.
-    """
+    """Classify a name using Genderize.io API."""
     name = request.args.get("name")
 
     # validate name query parameter
@@ -53,9 +57,7 @@ def classify_name():
     try:
         # Call Genderize.io API
         response = requests.get(
-            GENDERIZE_API_URL,
-            params={"name": name},
-            timeout=REQUEST_TIMEOUT
+            GENDERIZE_API_URL, params={"name": name}, timeout=REQUEST_TIMEOUT
         )
         response.raise_for_status()
         data = response.json()
@@ -68,9 +70,13 @@ def classify_name():
         return jsonify({"status": "success", "data": processed_data}), 200
 
     except requests.exceptions.Timeout:
-        return jsonify({"status": "error", "message": "Upstream API request timed out"}), 502
+        return jsonify(
+            {"status": "error", "message": "Upstream API request timed out"}
+        ), 502
     except requests.exceptions.RequestException as e:
-        return jsonify({"status": "error", "message": f"Upstream API error: {e!s}"}), 502
+        return jsonify(
+            {"status": "error", "message": f"Upstream API error: {e!s}"}
+        ), 502
     except Exception as e:
         return jsonify({"status": "error", "message": f"Server error: {e!s}"}), 500
 
