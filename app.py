@@ -21,6 +21,17 @@ HOST = "0.0.0.0"
 PORT = 5000
 
 
+@app.route("/")
+def root():
+    """Root endpoint.
+    """
+    return {
+        "message": "Welcome to Genderize API",
+        "version": "v1.0.0",
+        "author": "@tonybnya"
+    }
+
+
 @app.route("/api/classify", methods=["GET"])
 def classify_name():
     """Classify a name using Genderize.io API.
