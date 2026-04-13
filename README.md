@@ -10,6 +10,7 @@ Returns structured responses with confidence scoring and performance metrics.
 - **Error handling**: 400, 422, 500, 502 error responses
 - **Response**: Computes confidence scores and restructures data
 - **Performance**: Flask processing under 500ms (excluding Genderize.io API latency)
+- **Deployed on Vercel**: Serverless deployment with automatic scaling
 
 ## API Endpoint
 
@@ -80,8 +81,9 @@ All errors follow this structure:
 
 ### Prerequisites
 
-- Python 3.11+
+- Python 3.12+
 - [uv](https://docs.astral.sh/uv/) package manager
+- Node.js (optional, for Vercel CLI)
 
 ### Setup
 
@@ -106,7 +108,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Start the Server
+### Start the Server (Local Development)
 
 ```bash
 uv run python app.py
@@ -116,7 +118,7 @@ The server starts on `http://localhost:5000`
 
 ### Tests
 
-#### Using curl
+#### Using curl (Local)
 
 ```bash
 # Basic request
@@ -124,6 +126,16 @@ curl "http://localhost:5000/api/classify?name=yanis"
 
 # With pretty output
 curl "http://localhost:5000/api/classify?name=tony" | python -m json.tool
+```
+
+#### Using curl (Production)
+
+```bash
+# Basic request
+curl "https://genderize-api-alpha.vercel.app/api/classify?name=yanis"
+
+# With pretty output
+curl "https://genderize-api-alpha.vercel.app/api/classify?name=tony" | python -m json.tool
 ```
 
 #### Error Cases
@@ -150,6 +162,21 @@ curl "http://localhost:5000/api/classify?name=123"
 
 ```
 genderize-api/
+├── api/ # Vercel serverless entry point
+│   ├── __init__.py
+│   └── index.py # ASGI adapter for Vercel
+├── app.py # Flask application with endpoints
+├── utils.py # Helper functions
+├── requirements.txt # Python dependencies
+├── pyproject.toml # uv project configuration
+├── uv.lock # uv lock file
+├── vercel.json # Vercel deployment configuration
+├── .vercelignore # Vercel ignore patterns
+├── .env # Local environment variables
+├── .env.example # Environment template
+└── README.md # This file
+```
+genderize-api/
 ├── app.py              # Flask application with endpoints
 ├── utils.py            # Helper functions
 ├── requirements.txt    # Python dependencies
@@ -157,6 +184,49 @@ genderize-api/
 ├── uv.lock             # uv lock file
 └── README.md           # This file
 ```
+
+## Deployment
+
+### Deploy on Vercel
+
+This API is configured for serverless deployment on Vercel.
+
+#### Prerequisites
+
+- Vercel CLI: `npm i -g vercel`
+- Vercel account (free tier available)
+
+#### Deploy
+
+```bash
+# Login to Vercel
+vercel login
+
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+#### Environment Variables
+
+Set environment variables in Vercel dashboard or CLI:
+
+```bash
+vercel env add DEBUG
+vercel env add GENDERIZE_API_URL
+```
+
+### Deploy on Other Platforms
+
+The project can be containerized for deployment on platforms like:
+- Fly.io
+- Railway
+- Google Cloud Run
+- AWS Lambda
+
+Create a `Dockerfile` if needed for containerized deployment.
 
 ## License
 
