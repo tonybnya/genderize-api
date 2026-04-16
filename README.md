@@ -59,14 +59,14 @@ GET /api/classify?name={name}
 
 ## Error Responses
 
-| Status | Condition | Message |
-|--------|-----------|---------|
-| 400 | Missing or empty name | "Missing 'name' query parameter" or "Name cannot be empty" |
-| 422 | Name is not a string | "Name must be a string" |
-| 404 | Genderize returns null/empty | "No prediction available for the provided name" |
-| 502 | Upstream API timeout | "Upstream API request timed out" |
-| 502 | Upstream API failure | "Upstream API error: {details}" |
-| 500 | Server error | "Server error: {details}" |
+| Status | Condition                    | Message                                                    |
+| ------ | ---------------------------- | ---------------------------------------------------------- |
+| 400    | Missing or empty name        | "Missing 'name' query parameter" or "Name cannot be empty" |
+| 422    | Name is not a string         | "Name must be a string"                                    |
+| 404    | Genderize returns null/empty | "No prediction available for the provided name"            |
+| 502    | Upstream API timeout         | "Upstream API request timed out"                           |
+| 502    | Upstream API failure         | "Upstream API error: {details}"                            |
+| 500    | Server error                 | "Server error: {details}"                                  |
 
 All errors follow this structure:
 
@@ -176,14 +176,6 @@ genderize-api/
 ├── .env.example # Environment template
 └── README.md # This file
 ```
-genderize-api/
-├── app.py              # Flask application with endpoints
-├── utils.py            # Helper functions
-├── requirements.txt    # Python dependencies
-├── pyproject.toml      # uv project configuration
-├── uv.lock             # uv lock file
-└── README.md           # This file
-```
 
 ## Deployment
 
@@ -221,6 +213,7 @@ vercel env add GENDERIZE_API_URL
 ### Deploy on Other Platforms
 
 The project can be containerized for deployment on platforms like:
+
 - Fly.io
 - Railway
 - Google Cloud Run
