@@ -174,7 +174,7 @@ genderize-api/
 ├── .vercelignore # Vercel ignore patterns
 ├── .env # Local environment variables
 ├── .env.example # Environment template
-└── README.md # This file
+└── README.md
 ```
 
 ## Deployment
